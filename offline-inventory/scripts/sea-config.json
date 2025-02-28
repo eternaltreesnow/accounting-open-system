@@ -1,0 +1,4 @@
+{
+    "main": "./index.bundle.js",
+    "output": "sea.blob"
+}

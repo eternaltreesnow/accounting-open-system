@@ -1,0 +1,21 @@
+{
+  "name": "offline-inventory",
+  "version": "1.0.0",
+  "description": "A offline inventory system base on Excel files.",
+  "main": "index.js",
+  "author": "DickTseng",
+  "license": "MIT",
+  "scripts": {
+    "init": "node scripts/init.js",
+    "balance": "node index.js",
+    "build": "esbuild index.js --bundle --platform=node --outfile=index.bundle.js"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "node-xlsx": "^0.24.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.23.1"
+  }
+}
