@@ -1,3 +1,7 @@
+const fs = require('fs');
+const path = require('path');
+const { isEffectString } = require("./utils");
+
 const LOG_LEVEL = {
   noLog: 'noLog',
   log: 'log',
@@ -25,11 +29,21 @@ const LOG_API = {
 class Log {
   static level = LOG_LEVEL_ENUM[LOG_LEVEL.info];
 
+  static file;
+
   static setLevel(level) {
     if (!LOG_LEVEL.keys.includes(level)) {
       throw new Error(`Invalid log level: ${level}`);
     }
     Log.level = LOG_LEVEL_ENUM[level];
+  }
+
+  static setFile(filePath) {
+    if (isEffectString(filePath)) {
+      Log.file = path.resolve(filePath);
+    } else {
+      throw new Error(`Invalid log file path: ${filePath}`);
+    }
   }
 
   static getTime() {
@@ -54,6 +68,11 @@ class Log {
 
     if (typeof LOG_API[level] === 'function') {
       LOG_API[level](log);
+    }
+
+    // 如果设置了日志文件路径，则将日志写入文件
+    if (Log.file) {
+      fs.appendFileSync(Log.file, log + '\n', 'utf8');
     }
   }
 
