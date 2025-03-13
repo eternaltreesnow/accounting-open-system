@@ -8,7 +8,6 @@ const { readXlsx, writeXlsx } = require("../utils/xlsx");
 const {
   isEffectObject,
   isEffectString,
-  formatDate,
   isEffectArray,
 } = require("../utils/utils");
 
@@ -21,7 +20,7 @@ const argv = yargs(hideBin(process.argv)).argv;
 const Config = {
   inputDir: "./input",
   outputDir: "./output",
-  customerFile: "20250227180118_辅助核算_客户.xlsx",
+  customerFile: "20250313190548_辅助核算_客户.xlsx",
 
   resultTemplate: {},
   Elfbar: {
@@ -33,7 +32,7 @@ const Config = {
     sampleWarehouse: "Elfbar-样品仓",
   },
   Voopoo: {
-    salesFile: "Open System sales&purchase-Voopoo 05Mar2025.xlsx",
+    salesFile: "Open System sales&purchase-Voopoo 10Mar2025.xlsx",
     brand: "Voopoo",
     orderFile: "销售订单-Voopoo.xlsx",
     outboundFile: "销售出库-Voopoo.xlsx",
@@ -51,6 +50,7 @@ const readSalesData = (brandConfig) => {
     sheetLists: ["Sales"],
     colType: {
       "Order \nDate": "date",
+      "Order\n Date": "date",
       "outbound\n Date": "date",
       "outbound\ndate": "date",
     },
@@ -73,8 +73,8 @@ const readSalesData = (brandConfig) => {
     Object.keys(item).forEach((key) => {
       obj[key] = item[key];
     });
-    obj["outboundDate"] = item["outboundDate"];
-    obj["invoiceNo"] = item["InvoiceNo."];
+    obj["outboundDate"] = item["outboundDate"] || item["outbounddate"];
+    obj["invoiceNo"] = item["InvoiceNo."] || item["InvocieNo."];
     obj["orderDate"] = item["OrderDate"];
     obj["unit"] = item["UNIT"];
     obj["stockNo"] = item["StockNo."];
