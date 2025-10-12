@@ -16,7 +16,7 @@ const argv = yargs(hideBin(process.argv)).argv;
 const Config = {
   inputDir: "./input",
   outputDir: "./output",
-  customerFile: "20250227180118_辅助核算_客户.xlsx",
+  customerFile: "20250706180118_辅助核算_客户.xlsx",
 
   resultTemplate: {
     凭证字: "记",
@@ -24,18 +24,25 @@ const Config = {
     汇率: 1,
   },
   Elfbar: {
-    salesFile: "ELFBAR  2025年1月.xlsx",
+    salesFile: "ELFBAR 2025年6月.xlsx",
     brand: "Elfbar",
     resultFile: "result-ELFBAR.xlsx",
     sampleCode: "140503",
     sampleCodeName: "库存商品(Sample-Elfbar)",
   },
   Voopoo: {
-    salesFile: "Voopoo  2025年1月.xlsx",
+    salesFile: "Voopoo 2025年6月.xlsx",
     brand: "Voopoo",
     resultFile: "result-Voopoo.xlsx",
     sampleCode: "140504",
     sampleCodeName: "库存商品(Sample-Voopoo)",
+  },
+  Hellvape: {
+    salesFile: "HELLVAPE 2025年6月.xlsx",
+    brand: "Hellvape",
+    resultFile: "result-Hellvape.xlsx",
+    sampleCode: "140504",
+    sampleCodeName: "库存商品(Sample-Hellvape)",
   },
 };
 

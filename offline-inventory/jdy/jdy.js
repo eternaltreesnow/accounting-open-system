@@ -20,24 +20,32 @@ const argv = yargs(hideBin(process.argv)).argv;
 const Config = {
   inputDir: "./input",
   outputDir: "./output",
-  customerFile: "20250313190548_辅助核算_客户.xlsx",
+  customerFile: "20250706_辅助核算_客户.xlsx",
 
   resultTemplate: {},
   Elfbar: {
-    salesFile: "Open System sales&purchase-ELFBAR 05Mar2025.xlsx",
+    salesFile: "ELFBAR June 2025.xlsx",
     brand: "Elfbar",
-    orderFile: "销售订单-Elfbar.xlsx",
-    outboundFile: "销售出库-Elfbar.xlsx",
+    orderFile: "Elfbar-销售订单.xlsx",
+    outboundFile: "Elfbar-销售出库.xlsx",
     warehouse: "Elfbar",
     sampleWarehouse: "Elfbar-样品仓",
   },
   Voopoo: {
-    salesFile: "Open System sales&purchase-Voopoo 10Mar2025.xlsx",
+    salesFile: "Voopoo June 2025.xlsx",
     brand: "Voopoo",
-    orderFile: "销售订单-Voopoo.xlsx",
-    outboundFile: "销售出库-Voopoo.xlsx",
+    orderFile: "Voopoo-销售订单.xlsx",
+    outboundFile: "Voopoo-销售出库.xlsx",
     warehouse: "Voopoo",
     sampleWarehouse: "Voopoo-样品仓",
+  },
+  Hellvape: {
+    salesFile: "HELLVAPE June 2025.xlsx",
+    brand: "Hellvape",
+    orderFile: "Hellvape-销售订单.xlsx",
+    outboundFile: "Hellvape-销售出库.xlsx",
+    warehouse: "Hellvape",
+    sampleWarehouse: "Hellvape-样品仓",
   },
 };
 
@@ -175,7 +183,8 @@ const processSalesOrder = (salesData, customerMap, brandConfig) => {
     }
     const group = orderGroupedData.get(key);
     // 分类型字段处理
-    const isSample = !item["total"] || isNaN(Number(item["total"]));
+    const isSample = false;
+    // const isSample = !item["total"] || isNaN(Number(item["total"]));
     if (isSample) {
       item["warehouse"] = brandConfig.sampleWarehouse;
       group.sampleItem.push(item);
