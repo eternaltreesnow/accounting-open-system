@@ -13,6 +13,29 @@ const {
 
 const TAG = "JDY Template";
 
+/**
+ * 标准化客户名称，用于匹配客户映射表
+ * 1. 去除所有空格
+ * 2. 转大写
+ * 3. 全角括号/斜杠 → 半角
+ * 4. 移除撇号（'）等特殊标点
+ * 5. 半角括号 → 斜杠（统一分隔符）
+ * 6. 移除点号（解决 Mr. vs Mr、PT. vs PT 等差异）
+ */
+const normalizeCustomerName = (name) => {
+  if (!isEffectString(name)) return "";
+  return name
+    .replace(/\s+/g, "")
+    .toUpperCase()
+    .replace(/\uff08/g, "(")  // 全角左括号 → 半角
+    .replace(/\uff09/g, ")")  // 全角右括号 → 半角
+    .replace(/\uff0f/g, "/")  // 全角斜杠 → 半角
+    .replace(/['']/g, "")     // 移除撇号
+    .replace(/\(/g, "/")      // 左括号 → 斜杠
+    .replace(/\)/g, "")       // 移除右括号
+    .replace(/\./g, "");      // 移除点号
+};
+
 const logFile = path.resolve(__dirname, "./output/log.txt");
 
 const argv = yargs(hideBin(process.argv)).argv;
@@ -20,7 +43,7 @@ const argv = yargs(hideBin(process.argv)).argv;
 const Config = {
   inputDir: "./input",
   outputDir: "./output",
-  customerFile: "20250706_辅助核算_客户.xlsx",
+  customerFile: "202603_辅助核算_客户.xlsx",
 
   resultTemplate: {},
   Elfbar: {
@@ -32,7 +55,7 @@ const Config = {
     sampleWarehouse: "Elfbar-样品仓",
   },
   Voopoo: {
-    salesFile: "Voopoo June 2025.xlsx",
+    salesFile: "Open System sales purchase-Voopoo as per 17 Maret 2026.xlsx",
     brand: "Voopoo",
     orderFile: "Voopoo-销售订单.xlsx",
     outboundFile: "Voopoo-销售出库.xlsx",
@@ -110,8 +133,7 @@ const readCustomerMap = () => {
   // 取出object key为“辅助核算_客户”的数据，把其中“编码”和“名称”两列作为映射表，其中“名称”作为key，“编码”作为value
   const customerMap = new Map();
   data["辅助核算_客户"].forEach((item) => {
-    // 使用正则表达式移除所有空格（包括中间的空格）
-    const cleanName = item["名称"].replace(/\s+/g, "").toUpperCase();
+    const cleanName = normalizeCustomerName(item["名称"]);
     customerMap.set(cleanName, item["编码"]);
   });
   Log.i(TAG, `Customer map size: ${customerMap.size}`);
@@ -160,10 +182,14 @@ const processSalesOrder = (salesData, customerMap, brandConfig) => {
 
   // 单行数据做处理
   filteredData.forEach((item) => {
-    const standardStoreName = item["storeName"]
-      .replace(/\s+/g, "")
-      .toUpperCase();
+    const standardStoreName = normalizeCustomerName(item["storeName"]);
     item["clientNo"] = customerMap.get(standardStoreName) || "Error";
+    if (item["clientNo"] === "Error") {
+      Log.i(
+        TAG,
+        `客户编号匹配失败: storeName=[${item["storeName"]}], normalized=[${standardStoreName}]`
+      );
+    }
     // 将invoiceNo中的斜杠替换为连字符
     item["invoiceNo"] = item["invoiceNo"].replace(/\//g, "-").toUpperCase();
   });
